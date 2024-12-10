@@ -1,0 +1,25 @@
+{
+  "name": "qrgenerator",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "type": "module",
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "crc": "^4.3.2",
+    "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "qrcode": "^1.5.4",
+    "vietqr": "^1.1.9",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  }
+}

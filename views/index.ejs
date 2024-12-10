@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html ng-app="qrApp">
+<%- include('partials/header') %>
+<body ng-controller="MainController">
+  <%- include('partials/navbar') %>
+  <div class="container">
+    <form class="mt-4">
+      <div class="form-group">
+        <label for="acquier_id">Bank BIN:</label>
+        <select class="form-control" id="acquier_id" ng-model="qrData.acquier_id" ng-options="bank.bin as (bank.shortName + ' (' + bank.name + ')') for bank in banks">
+          <option value="">Select a bank</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="consumer_id">Consumer ID:</label>
+        <input type="text" class="form-control" id="consumer_id" ng-model="qrData.consumer_id">
+      </div>
+      <div class="form-group">
+        <label for="money">Money:</label>
+        <input type="text" class="form-control" id="money" ng-model="qrData.money" placeholder="VND">
+      </div>
+      <div class="form-group">
+        <label for="content">Content:</label>
+        <input type="text" class="form-control" id="content" ng-model="qrData.content" placeholder="Let your customer decide">
+      </div>
+      <div class="form-group">
+        <label for="service_code">Service Code:</label>
+        <select class="form-control" id="service_code" ng-model="qrData.service_code" ng-options="service.code as service.name for service in services">
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="logo">Logo URL:</label>
+        <input type="text" class="form-control" id="logo" ng-model="qrData.logo" placeholder="No logo, better readability">
+      </div>
+      <div class="form-group">
+        <label for="margin">Margin:</label>
+        <input type="number" class="form-control" id="margin" ng-model="qrData.margin" placeholder="Default">
+      </div>
+      <div class="form-group">
+        <label for="scale">Scale:</label>
+        <input type="number" class="form-control" id="scale" ng-model="qrData.scale" placeholder="Default 4">
+      </div>
+      <div class="form-group">
+        <label for="width">Width:</label>
+        <input type="number" class="form-control" id="width" ng-model="qrData.width" placeholder="Default 4">
+      </div>
+      <div class="form-group">
+        <label for="color">Color:</label>
+        <input type="number" class="form-control" id="color" ng-model="qrData.color" placeholder="Takes precedence over scale">
+      </div>
+      <div class="form-group">
+        <label for="color_dark">Color Dark:</label>
+        <input type="text" class="form-control" id="color_dark" ng-model="qrData.color_dark" placeholder="Default #000000ff">
+      </div>
+      <div class="form-group">
+        <label for="color_light">Color Light:</label>
+        <input type="text" class="form-control" id="color_light" ng-model="qrData.color_light" placeholder="Default #ffffffff">
+      </div>
+      <div class="form-group">
+        <label for="mode">Mode:</label>
+        <input type="text" class="form-control" id="mode" ng-model="qrData.mode">
+      </div>
+      <div class="form-group">
+        <label for="version">Version:</label>
+        <input type="text" class="form-control" id="version" ng-model="qrData.version">
+      </div>
+      <div class="form-group">
+        <label for="errorCorrectionLevels">Error Correction Levels:</label>
+        <select class="form-control" id="errorCorrectionLevels" ng-model="qrData.error_correction_level" ng-options="errorCorrectionLevel.code as errorCorrectionLevel.name for errorCorrectionLevel in errorCorrectionLevels">
+          <option value="">Select an error correction level</option>
+        </select>
+      </div>
+      <button type="button" class="btn btn-primary" ng-click="generateQR('png')">Generate QR PNG</button>
+      <button type="button" class="btn btn-secondary" ng-click="generateQR('svg')">Generate QR SVG</button>
+    </form>
+
+    <div ng-show="error">
+      <p>{{ error }}</p>
+    </div>
+
+    <div class="mt-4" ng-if="qrResult">
+        <h3>QR Code Result:</h3>
+        <img ng-if="qrType === 'png'" ng-src="{{qrResult}}" alt="QR Code">
+        <div ng-if="qrType === 'svg'" ng-bind-html="qrResult"></div>
+    </div>
+  </div>
+  <script src="/javascripts/index.js"></script>
+</body>
+</html>
