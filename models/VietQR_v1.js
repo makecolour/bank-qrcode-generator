@@ -7,6 +7,9 @@ const SERVICE_CODE = {
     account: "QRIBFTTA"
 };
 
+import crc16ccittfalse from '@taichunmin/crc/crc16ccittfalse'
+import removeAccents from 'remove-accents';
+
 export const NAPAS_GUID = "A000000727";
 
 const CURRENCY = {
@@ -141,7 +144,7 @@ export const CRC = {
      * @param {*} str
      * @returns
      */
-    nonAccentVietnamese(str) {
+    nonAccentVietnameseAlt(str) {
         str = str.toLowerCase();
         str = str.replace(new RegExp('/', 'g'), '-')
 //     We can also use this instead of from line 11 to line 17
@@ -163,7 +166,16 @@ export const CRC = {
         str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); // Huyền sắc hỏi ngã nặng
         str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // Â, Ê, Ă, Ơ, Ư
         return str.toUpperCase().trim();
+    },
+
+    getCrc16Utf8(str) {
+        return crc16ccittfalse(Buffer.from(str)).toString(16).padStart(4, '0').toUpperCase();
+    },
+
+    nonAccentVietnamese(str) {
+        return removeAccents(str).trim();
     }
+
 }
 
 class TLV {
@@ -221,8 +233,9 @@ class VIETQR {
                 str += this.data[de].toString()
             }
         }
-        let semi_vietqr = `${str}6304`
-        let crc_value = CRC.getCrc16_array(semi_vietqr)
+        let semi_vietqr = `${str}6304`;
+        // let crc_value = CRC.getCrc16_array(semi_vietqr);
+        let crc_value = CRC.getCrc16Utf8(semi_vietqr);
         return `${semi_vietqr}${crc_value}`
     }
 

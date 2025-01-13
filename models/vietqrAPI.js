@@ -16,6 +16,8 @@ class VietQRAPI {
     getInstance() {
         return VietQRAPI.instance;
     }
+
+
 }
 
 const vietQRInstance = new VietQRAPI().getInstance();

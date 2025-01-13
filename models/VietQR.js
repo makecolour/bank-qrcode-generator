@@ -1,4 +1,6 @@
-import crc from 'crc';
+import crc16ccittfalse from '@taichunmin/crc/crc16ccittfalse'
+import removeAccents from 'remove-accents';
+
 export default class QRCode {
     payloadFormatIndicator;
     pointOfInitiationMethod;
@@ -55,6 +57,7 @@ export default class QRCode {
     }
   
     setAdditionalDataFieldTemplate(content) {
+      content = removeAccents(content).trim();
       const contentLength = this.convertLength(content.length);
       const additionalDataFieldTemplateLength = this.convertLength(
         content.length + 4
@@ -112,7 +115,7 @@ export default class QRCode {
     }
 
     calcCRC2(str) {
-      return crc.crc16xmodem(str);
+      return crc16ccittfalse(Buffer.from(str)).toString(16).padStart(4, '0').toUpperCase();
     }
   
     build() {

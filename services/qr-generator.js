@@ -7,13 +7,15 @@ import { registerFont, createCanvas, loadImage } from 'canvas';
 import { VIETQR as VietQRV1, SERVICE_CODE, CURRENCY } from "../models/VietQR_v1.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+import { VietQR as vqr } from 'vietqr';
 dotenv.config();
 
 const buildQRString = (req, res) => {
-    const acquierID = req.query.acquier_id;
-    const consumerID = req.query.consumer_id;
-    const money = req.query.money;
-    const content = req.query.content;
+    const acquierID = req.query.acquier_id ? req.query.acquier_id : req.query.acq.bank;
+    const consumerID = req.query.consumer_id ? req.query.consumer_id : req.query.accountName;
+    const money = req.query.money ? req.query.money : req.query.amount;
+    const content = req.query.content ? req.query.content : req.query.memo;
     const serviceCode = req.query.service_code;
 
     if (!acquierID || !consumerID) {
@@ -107,7 +109,7 @@ const addLogoToCanvas = async (canvas, logoUrl, options) => {
 
 
 const buildQRDataUrl = async (req, res) => {
-    var qrString = buildQRString(req, res);
+    var qrString = "";
     if(req.query.version && req.query.version == 1) {
         qrString = buildQRStringAlt(req, res);
     } else {
@@ -231,11 +233,11 @@ const buildQRDataUrlWithInfo = async (req, res) => {
         options.errorCorrectionLevel = 'H';
     }
 
-    const backgroundUrl = req.query.background_url; 
+    const backgroundUrl = req.query.background_url; // URL
     const canvasWidth = process.env.COMPACT_QR_WIDTH ? parseInt(process.env.COMPACT_QR_WIDTH) : 960;
     const canvasHeight = process.env.COMPACT_QR_HEIGHT ? parseInt(process.env.COMPACT_QR_HEIGHT) : 1704;
     const qrCanvasSize = canvasWidth * 0.65; 
-    const logoUrl = req.query.header_logo; 
+    const logoUrl = req.query.header_logo; // URL 
     let logoHeight = 0;
     const logoPaddingTop = canvasHeight * 0.045; 
 
@@ -249,10 +251,10 @@ const buildQRDataUrlWithInfo = async (req, res) => {
         logoHeight = desiredLogoHeight;
     }
 
-    const currencyCode = req.query.currency && CURRENCY[req.query.currency.toLowerCase()] ? req.query.currency.toUpperCase() : 'VND';
+    const currencyCode = req.query.currency && CURRENCY[req.query.currency.toLowerCase()] ? req.query.currency.toUpperCase() : 'VND'; // Currency - VND / USD
 
     const money = req.query.money ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: currencyCode }).format(req.query.money) : '';
-    var bankName = req.query.bank_name || '';
+    var bankName = req.query.bank_name || ''; // Bank Name - Cho chọn như V1
     var bankImg = '';
 
     if (req.query.acquier_id) {
@@ -274,7 +276,7 @@ const buildQRDataUrlWithInfo = async (req, res) => {
     registerFont(arialPathItalic, { family: 'Arial', weight: 'normal', style: 'italic' });
 
     const params = [
-        { label: req.query.consumer_name.toUpperCase() || '', font: `${canvasHeight * 0.024}px Arial` },
+        { label: req.query.consumer_name ? req.query.consumer_name.toUpperCase() : req.query.consumerName.accountName() || '', font: `${canvasHeight * 0.024}px Arial` },
         { label: req.query.consumer_id || '', font: `${canvasHeight * 0.025}px Arial` },
         { label: bankName || '', font: `${canvasHeight * 0.025}px Arial` },
         { label: money, font: `bold ${canvasHeight * 0.03}px Arial` },
@@ -288,7 +290,7 @@ const buildQRDataUrlWithInfo = async (req, res) => {
     await QRCode.toCanvas(qrCanvas, qrString, { ...options, width: qrCanvasSize, height: qrCanvasSize });
 
     if (req.query.logo) {
-        await addLogoToCanvas(qrCanvas, req.query.logo, options);
+        await addLogoToCanvas(qrCanvas, req.query.logo, options); // URL - Middle of QR logo
     } else {
         // await addLogoToCanvas(qrCanvas, bankImg, options);
     }
@@ -336,7 +338,7 @@ const buildQRDataUrlWithInfo = async (req, res) => {
 
     var textColor;
     if(req.query.text_color) {
-        textColor = req.query.text_color;
+        textColor = req.query.text_color; // Text Color - #Hex
     } else if(options.color?.dark) {
         textColor = options.color.dark;
     } else {
@@ -352,7 +354,7 @@ const buildQRDataUrlWithInfo = async (req, res) => {
             case 'none':
                 textBackground = null;
             default:
-                textBackground = req.query.text_background;
+                textBackground = req.query.text_background; // #HEX
                 break;
         }
     } else if(options.color?.light) {
@@ -377,14 +379,14 @@ const buildQRDataUrlWithInfo = async (req, res) => {
         const footerY = canvasHeight - canvasHeight * 0.02; 
         var footerColor;
         if(req.query.footer_color) {
-            footerColor = req.query.footer_color;
+            footerColor = req.query.footer_color; // Footer color - #Hex
         } else {
             footerColor = 'white';
         }
         wrapText(ctx, req.query.footer, canvas.width / 2, footerY, maxWidth, lineHeight, '', footerColor);
     }
     const dataUrl = canvas.toDataURL('image/png');
-    logger.info('Generated QR Code with additional info: ' + qrString);
+    logger.info('Generated QR string with additional info: ' + qrString);
     return dataUrl;
 };
 
@@ -460,5 +462,19 @@ const buildQRStringAlt = (req, res) => {
     }
     return vietQRdata.builder();
 };
+
+const vietQrCreate = (req, res) => {
+
+}
+
+const getVietQRTemplate = async (req, res) => {
+    try {
+        const templates = await vietQRInstance;
+        return templates;
+    } catch (error) {
+        logger.error('Error fetching templates:', error);
+        throw error;
+    }
+}
 
 export { buildQRDataUrl, buildQRSVG, buildQRString, buildQRStringAlt, buildQRDataUrlWithInfo };

@@ -1,4 +1,4 @@
-angular.module('qrApp', [])
+var app = angular.module('qrApp', [])
         .controller('MainController', ['$scope', '$http', '$sce', function($scope, $http, $sce) {
           $scope.qrData = {
             service_code: 'account',
@@ -17,7 +17,6 @@ angular.module('qrApp', [])
             { code: 'Q', name: 'Quartile' },
             { code: 'H', name: 'High' }
           ];
-
           // Fetch bank data
           $http.get('/api/v2/banks')
             .then(function(response) {
@@ -47,4 +46,5 @@ angular.module('qrApp', [])
                 $scope.error = 'Error generating QR code: ' + error.data;
               });
           };
+        
         }]);

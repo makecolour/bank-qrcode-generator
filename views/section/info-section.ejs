@@ -1,0 +1,112 @@
+
+<!-- Siphon Info - V1 Generator -->
+<div class="tab-pane fade px-4 py-4 bg-light bg-gradient rounded-bottom-4" id="contact-tab-pane" role="tabpanel" aria-labelledby="info-tab" ng-controller="info-controller" tabindex="0">
+    <form>
+        <div class="row row-cols-2">
+            <!-- Required Bank Info -->
+            <div class="col">
+                <label class="h2">Banking Info:</label>
+
+                <div class="form-group">
+                    <label for="acquier_id">Bank BIN:</label>
+                    <select class="form-control" id="acquier_id" ng-model="qrData.acquier_id"
+                            ng-options="bank.bin as (bank.shortName + ' (' + bank.name + ')') for bank in banks">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="consumer_id">Consumer ID:</label>
+                    <input type="text" class="form-control" id="consumer_id" ng-model="qrData.consumer_id">
+                </div>
+                <div class="form-group">
+                    <label for="consumer_name">Consumer Name:</label>
+                    <input type="text" class="form-control" id="consumer_name" ng-model="qrData.consumer_name">
+                </div>
+                <div class="form-group">
+                    <label for="money">Money:</label>
+                    <input type="text" class="form-control" id="money" ng-model="qrData.money" placeholder="VND">
+                </div>
+                <div class="form-group">
+                    <label for="content">Content:</label>
+                    <input type="text" class="form-control" id="content" ng-model="qrData.content"
+                           placeholder="Let your customer decide">
+                </div>
+                <div class="form-group">
+                    <label for="service_code">Service Code:</label>
+                    <select class="form-control" id="service_code" ng-model="qrData.service_code"
+                            ng-options="service.code as service.name for service in services">
+                    </select>
+                </div>
+            </div>
+
+            <!-- QR Settings Info -->
+            <div class="col">
+                <label class="h2">QR Settings Info:</label>
+
+                <div class="form-group">
+                    <label for="background_id">Background Image:</label>
+                    <input type="text" class="form-control" id="background_id" ng-model="qrData.background_url" placeholder="URL to Image, Can be left Empty">
+                </div>
+                <div class="form-group">
+                    <label for="header_id">Header Logo:</label>
+                    <input type="text" class="form-control" id="header_id" ng-model="qrData.header_logo" placeholder="URL to Image, Can be left Empty">
+                </div>
+                <div class="form-group">
+                    <label for="currency_type">Currency:</label>
+                    <select class="form-control" id="currency_type" ng-model="qrData.currency"
+                            ng-options="currency.code as currency.name for currency in currency">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="middle_image">Middle Image:</label>
+                    <input type="text" class="form-control" id="middle_image" ng-model="qrData.logo"
+                           placeholder="URL to Image, Can be left Empty">
+                </div>
+                <div class="form-group">
+                    <label for="footer_text">Footer Text:</label>
+                    <input type="text" class="form-control" id="footer_image" ng-model="qrData.footer"
+                           placeholder="Can be left Empty">
+                </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-2 mt-3">
+            <div class="col">
+                <label class="h2">Color Setting:</label>
+
+                <div class="form-group">
+                    <label for="text_color">Text Color:</label>
+                    <input type="text" class="form-control" id="text_color" ng-model="qrData.text_color"
+                           placeholder="Hex Color #RRGGBB, Empty for #000000">
+                </div>
+                <div class="form-group">
+                    <label for="background_color">Background Color:</label>
+                    <input type="text" class="form-control" id="background_color" ng-model="qrData.text_background"
+                           placeholder="Hex Color #RRGGBB, Empty for #000000">
+                </div>
+                <div class="form-group">
+                    <label for="footer_color">Footer Color:</label>
+                    <input type="text" class="form-control" id="footer_color" ng-model="qrData.footer_color"
+                           placeholder="Hex Color #RRGGBB, Empty for #000000">
+                </div>
+                <div class="mt-4 flex align-content-between">
+                    <a class="generateBtn" type="button" ng-click="generateQR('png')" >Create QR With Info</a>
+                </div>
+            </div>
+
+            <div class="col">
+                <label class="h2">QR Generation Result</label>
+
+                <div ng-show="error">
+                    <p>{{ error }}</p>
+                </div>
+
+                <div class="mt-4" ng-if="qrResult">
+                    <h3>QR Code Result:</h3>
+                    <img ng-if="qrType === 'png'" ng-src="{{qrResult}}" alt="QR Code">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
