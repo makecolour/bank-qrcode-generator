@@ -1,4 +1,4 @@
-app.controller('v1-controller', ['$scope', '$http', '$sce', function($scope, $http, $sce) {
+app.controller('v1-controller', ['$scope', '$http', '$sce', 'bankService', function($scope, $http, $sce, bankService) {
     $scope.qrData = {
         service_code: 'account',
     };
@@ -16,23 +16,21 @@ app.controller('v1-controller', ['$scope', '$http', '$sce', function($scope, $ht
         { code: 'Q', name: 'Quartile' },
         { code: 'H', name: 'High' }
     ];
+    $scope.isLoading = false;
 
-    // Fetch bank data
-    $http.get('/api/v2/banks')
-        .then(function(response) {
-            $scope.banks = response.data;
-        })
-        .catch(function(error) {
-            console.error('Error fetching banks:', error);
-        });
+    bankService.fetchBanks().then(function(banks) {
+        $scope.banks = banks;
+    }).catch(function(error) {
+        console.error('Error fetching banks:', error);
+    });
 
     $scope.generateQR = function(type) {
         $scope.error = '';
         const url = type === 'png' ? '/api/qr-png' : '/api/qr-svg';
+        $scope.isLoading = true;
         $http.get(url, { params: $scope.qrData })
             .then(function(response) {
                 $scope.qrType = type;
-                console.log(response);
                 if(response.data.status === 'success') {
                     if (type === 'svg') {
                         $scope.qrResult = $sce.trustAsHtml(response.data.data);
@@ -40,10 +38,12 @@ app.controller('v1-controller', ['$scope', '$http', '$sce', function($scope, $ht
                         $scope.qrResult = response.data.data;
                     }
                 }
+                $scope.isLoading = false;
             })
             .catch(function(error) {
                 console.error('Error generating QR code:', error);
                 $scope.error = 'Error generating QR code: ' + error.data;
+                $scope.isLoading = false;
             });
     };
 }]);

@@ -1,16 +1,18 @@
 
 <!-- Siphon Info - V1 Generator -->
 <div class="tab-pane fade px-4 py-4 bg-light bg-gradient rounded-bottom-4" id="contact-tab-pane" role="tabpanel" aria-labelledby="info-tab" ng-controller="info-controller" tabindex="0">
+    <div class="loading-bar" ng-show="isLoading"></div>
     <form>
         <div class="row row-cols-2">
             <!-- Required Bank Info -->
             <div class="col">
-                <label class="h2">Banking Info:</label>
+                <label class="h4 fw-bold">Banking Info:</label>
 
                 <div class="form-group">
                     <label for="acquier_id">Bank BIN:</label>
                     <select class="form-control" id="acquier_id" ng-model="qrData.acquier_id"
                             ng-options="bank.bin as (bank.shortName + ' (' + bank.name + ')') for bank in banks">
+                        <option value="" disabled>Select a bank</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -40,7 +42,7 @@
 
             <!-- QR Settings Info -->
             <div class="col">
-                <label class="h2">QR Settings Info:</label>
+                <label class="h4 fw-bold">QR Settings Info:</label>
 
                 <div class="form-group">
                     <label for="background_id">Background Image:</label>
@@ -71,7 +73,7 @@
 
         <div class="row row-cols-2 mt-3">
             <div class="col">
-                <label class="h2">Color Setting:</label>
+                <label class="h4 fw-bold">Color Setting:</label>
 
                 <div class="form-group">
                     <label for="text_color">Text Color:</label>
@@ -89,20 +91,21 @@
                            placeholder="Hex Color #RRGGBB, Empty for #000000">
                 </div>
                 <div class="mt-4 flex align-content-between">
-                    <a class="generateBtn" type="button" ng-click="generateQR('png')" >Create QR With Info</a>
+                    <a class="generateBtn" type="button" ng-click="generateQR('png')" >Generate QR With Info</a>
                 </div>
             </div>
 
             <div class="col">
-                <label class="h2">QR Generation Result</label>
+                <label class="h4 fw-bold">QR Generation Result:</label>
 
-                <div ng-show="error">
-                    <p>{{ error }}</p>
-                </div>
-
-                <div class="mt-4" ng-if="qrResult">
-                    <h3>QR Code Result:</h3>
-                    <img ng-if="qrType === 'png'" ng-src="{{qrResult}}" alt="QR Code">
+                <div class="result-box">
+                    <div ng-if="error">
+                        <p class="error">{{ error }}</p>
+                    </div>
+    
+                    <div class="mt-4" ng-if="qrResult">
+                        <img class="mw-100" ng-src="{{qrResult}}" alt="QR Code">
+                    </div>
                 </div>
             </div>
         </div>

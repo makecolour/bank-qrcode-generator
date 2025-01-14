@@ -3,6 +3,7 @@ var app = angular.module('qrApp', [])
           $scope.qrData = {
             service_code: 'account',
           };
+          $scope.activeTab = 'normal-tab';
           $scope.qrResult = null;
           $scope.qrType = '';
           $scope.error = '';
@@ -17,14 +18,6 @@ var app = angular.module('qrApp', [])
             { code: 'Q', name: 'Quartile' },
             { code: 'H', name: 'High' }
           ];
-          // Fetch bank data
-          $http.get('/api/v2/banks')
-            .then(function(response) {
-              $scope.banks = response.data;
-            })
-            .catch(function(error) {
-              console.error('Error fetching banks:', error);
-            });
 
           $scope.generateQR = function(type) {
             $scope.error = '';
@@ -47,4 +40,7 @@ var app = angular.module('qrApp', [])
               });
           };
         
+          $scope.setActiveTab = function(tab) {
+            $scope.activeTab = tab;
+          }
         }]);

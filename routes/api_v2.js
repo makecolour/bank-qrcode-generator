@@ -10,6 +10,9 @@ router.get('/qr-png', async (req, res, next) => {
     }
     try {
         const qrCode = await vietQR.genQRCodeBase64(req.query);
+        if(qrCode.data.code && qrCode.data.code != '00') {
+            throw new Error(qrCode.data.desc);
+        }
         logger.info('Generated VietQR: ' + qrCode.data.data.qrDataURL);
         res.send({
             status: 'success',

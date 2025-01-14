@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html ng-app="qrApp" >
+<html ng-app="qrApp">
 <%- include('partials/header') %>
 <body data-bs-theme="light">
-<div class="outer-container">
+<div ng-controller="MainController" class="outer-container">
 
     <%- include('partials/navbar') %>
 
@@ -10,17 +10,21 @@
         <ul class="nav nav-tabs rounded-top-2" id="selector" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="normal-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
-                        type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">QR For Printing
+                        type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true" ng-click="setActiveTab('normal-tab')">
+                        QR For Printing
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane"
-                        type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">QR For Download
+                        type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" ng-click="setActiveTab('info-tab')">
+                        QR For Download
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="vietqr-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
-                        type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">VietQR
+                        type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" ng-click="setActiveTab('vietqr-tab')">
+                        <img src="/images/VietQR.png" alt="VietQR" class="vietqr-logo">
+                        
                 </button>
             </li>
         </ul>
@@ -31,13 +35,20 @@
             <%- include('section/v2-section') %>
         </div>
 
-
     </div>
 </div>
 <script src="/javascripts/index.js"></script>
+<script src="/javascripts/service/bank-service.js"></script>
 <script src="/javascripts/controller/v1-controller.js"></script>
 <script src="/javascripts/controller/v2-controller.js"></script>
 <script src="/javascripts/controller/info-controller.js"></script>
 <script src="/javascripts/controller/navbar-controller.js"></script>
+<script>
+    <% if (tab_id) { %>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('<%= tab_id %>').click();
+        });
+    <% } %>
+</script>
 </body>
 </html>

@@ -25,6 +25,34 @@ app.controller('navbar-controller', ['$scope', '$window', function ($scope, $win
         });
     };
 
+    $scope.share = function (platform) {
+        switch (platform) {
+            case 'facebook':
+                window.open('https://www.facebook.com/sharer/sharer.php?u=' + $window.location.href, '_blank');
+                break;
+            case 'twitter':
+                window.open('https://twitter.com/intent/tweet?url=' + $window.location.href, '_blank');
+                break;
+            case 'linkedin':
+                window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + $window.location.href, '_blank');
+                break;
+            case 'reddit':
+                window.open('https://www.reddit.com/submit?url=' + $window.location.href, '_blank');
+                break;
+            case 'whatsapp':
+                window.open('https://api.whatsapp.com/send?text=' + $window.location.href, '_blank');
+                break;
+            case 'telegram':
+                window.open('https://t.me/share/url?url=' + $window.location.href, '_blank');
+                break;
+            case 'email':
+                window.open('mailto:?body=' + $window.location.href, '_blank');
+                break;
+            default:
+                break;
+        }
+    };
+
     $scope.init = function () {
         let storedTheme = null;
 

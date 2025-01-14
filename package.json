@@ -1,9 +1,12 @@
 {
   "name": "qrgenerator",
-  "version": "0.0.0",
-  "private": true,
+  "version": "1.1.0",
+  "private": false,
   "scripts": {
     "start": "node ./bin/www"
+  },
+  "engines": {
+    "node": "18.20.0"
   },
   "type": "module",
   "dependencies": {

@@ -1,64 +1,78 @@
 <!-- VietQR - V2 QR Generator -->
 <div class="tab-pane fade px-4 py-4 bg-light bg-gradient rounded-bottom-4" id="profile-tab-pane" role="tabpanel" aria-labelledby="vietqr-tab" ng-controller="v2-controller" tabindex="0">
+    <div class="loading-bar" ng-show="isLoading"></div>
     <form>
         <div class="row row-cols-2">
             <!-- INFO -->
             <div class="col">
-                <label class="h2">Banking Info:</label>
+                <label class="h4 fw-bold">Banking Info:</label>
 
                 <div class="form-group">
                     <label for="acquier_id">Bank BIN:</label>
-                    <select class="form-control" id="acquier_id" ng-model="qrData.acquier_id"
+                    <select class="form-control" id="acquier_id" ng-model="qrData.bank"
                             ng-options="bank.bin as (bank.shortName + ' (' + bank.name + ')') for bank in banks">
+                        <option value="" disabled>Select a bank</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="consumer_name">Consumer Name:</label>
 
                     <!-- TODO - Add VietQR Name References here -->
-                    <input type="text" class="form-control" id="consumer_name" ng-model="qrData.consumer_name">
+                    <input type="text" class="form-control" id="consumer_name" ng-model="qrData.accountName">
                 </div>
                 <div class="form-group">
                     <label for="consumer_id">Consumer ID:</label>
-                    <input type="text" class="form-control" id="consumer_id" ng-model="qrData.consumer_id">
+                    <input type="text" class="form-control" id="consumer_id" ng-model="qrData.accountNumber">
                 </div>
                 <div class="form-group">
                     <label for="money">Money Amount:</label>
-                    <input type="text" class="form-control" id="money" ng-model="qrData.money" placeholder="VND">
+                    <input type="text" class="form-control" id="money" ng-model="qrData.amount" placeholder="VND">
                 </div>
                 <div class="form-group">
                     <label for="content">Content:</label>
-                    <input type="text" class="form-control" id="content" ng-model="qrData.content"
+                    <input type="text" class="form-control" id="content" ng-model="qrData.memo"
                            placeholder="Let your customer decide">
                 </div>
                 <div class="form-group">
                     <label for="template_id">VietQR Template:</label>
 
                     <!-- TODO - Add VietQr Template Call here -->
-                    <select class="form-control" id="template_id" ng-model="qrData.template_id"
+                    <select class="form-control" id="template_id" ng-model="qrData.template"
                             ng-options="template.value as template.name for template in templates">
-
+                        <option value="" disabled>Default</option>
                     </select>
                 </div>
                 <div class="mt-4 flex align-content-between">
-                    <a class="generateBtn" type="button" ng-click="generateQR('png')" >Create PNG QR</a>
-                    <a class="generateBtn" type="button" ng-click="generateQR('qr-quicklink')" >Create Quick Link</a>
-                    <a class="generateBtn" type="button" ng-click="generateQR('qr-string')" >Create VietQR String</a>
+                    <span class="text-muted">Please note that some third-party features may not work properly.</span>
+                </div>
+                <div class="mt-4 flex align-content-between">
+                    <a class="generateBtn" type="button" ng-click="generateQR('png')" >Generate PNG QR</a>
+                    <a class="generateBtn" type="button" ng-click="generateQR('qr-quicklink')" >Generate Quick Link</a>
+                    <a class="generateBtn" type="button" ng-click="generateQR('qr-string')" >Generate VietQR String</a>
                 </div>
             </div>
 
             <!-- QR Result -->
             <div class="col">
-                <label class="h2">QR Generation Result</label>
+                <label class="h4 fw-bold">QR Generation Result:</label>
 
-                <div ng-show="error">
-                    <p>{{ error }}</p>
-                </div>
-
-                <div class="mt-4" ng-if="qrResult">
-                    <h3>QR Code Result:</h3>
-                    <img ng-if="qrType === 'png'" ng-src="{{qrResult}}" alt="QR Code">
-                    <div ng-if="qrType === 'svg'" ng-bind-html="qrResult"></div>
+                <div class="result-box">
+                    <div ng-if="error">
+                        <p class="error">{{ error }}</p>
+                    </div>
+    
+                    <div class="mt-4" ng-if="qrResult">
+                        <img class="mw-100" ng-src="{{ qrResult }}" alt="QR Code">
+                    </div>
+    
+                    <div class="mt-4" ng-if="qrResultLink">
+                        <a class="mw-100" href="{{ qrResultLink }}" target="_blank">Click here to view your QR Code</a>
+                    </div>
+    
+                    <div class="mt-4" ng-if="qrResultString">
+                        <input type="text" class="form-control" ng-model="qrResultString" disabled>
+                        <button class="btn btn-primary mt-2" ng-click="copyToClipboard()">Copy to Clipboard</button>
+                    </div>
                 </div>
             </div>
         </div>
