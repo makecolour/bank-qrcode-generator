@@ -114,7 +114,7 @@
                     <label for="errorCorrectionLevels">Error Correction Levels:</label>
                     <select class="form-control" id="errorCorrectionLevels" ng-model="qrData.error_correction_level"
                             ng-options="errorCorrectionLevel.code as errorCorrectionLevel.name for errorCorrectionLevel in errorCorrectionLevels">
-                        <option value="">Select an error correction level</option>
+                        <option value="" disabled>Select an error correction level</option>
                     </select>
                 </div>
 
